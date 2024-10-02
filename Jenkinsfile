@@ -14,14 +14,6 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                 echo 'Building the project with Maven...'
-                 // Compilation avec Maven
-                 sh 'mvn clean install'
-            }
-        }
-
     }
 
     post {
