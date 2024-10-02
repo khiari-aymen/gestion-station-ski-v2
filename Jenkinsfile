@@ -22,12 +22,6 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the application...'
-                // Ajouter ici les étapes de déploiement (par exemple, copie des fichiers, docker, etc.)
-            }
-        }
     }
 
     post {
