@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Récupère le code source du dépôt Git
-                git branch: 'BOUABDALLAHMohamed-ERP-BI5-opsight', url: 'https://github.com/username/repository.githttps://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git'
+                git branch: 'BOUABDALLAHMohamed-ERP-BI5-opsight', url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git'
             }
         }
 
