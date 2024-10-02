@@ -13,23 +13,4 @@ pipeline {
                     url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git'
             }
         }
-        stage('Build') {
-            steps {
-                echo 'Building...'
-                // Ajoutez ici les commandes de build, comme Maven ou Gradle
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-                // Ajoutez ici les commandes de test, comme des tests unitaires
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-                // Ajoutez ici vos commandes de déploiement
-            }
-        }
-    }
-}
+    }}
