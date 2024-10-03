@@ -11,7 +11,7 @@ pipeline {
  
         stage('Build') {
             steps {
-                // Remplacez par vos commandes de build (par exemple, pour Maven, npm, etc.)
+                //** Remplacez par vos commandes de build (par exemple, pour Maven, npm, etc.)
                 echo 'Building the project...'
                 // sh 'mvn clean install' (par exemple pour un projet Maven)
             }
