@@ -20,7 +20,7 @@
 
             steps {
 
-                // Remplacez par vos commandes de build (par exemple, pour Maven, npm, etc.)
+                // Remplacez parr vos commandes de build (par exemple, pour Maven, npm, etc.)
 
                 echo 'Building the project...'
 
