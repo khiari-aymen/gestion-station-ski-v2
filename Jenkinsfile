@@ -1,4 +1,4 @@
-pipeline {
+       pipeline {
 
     agent any
  
@@ -34,7 +34,7 @@ pipeline {
 
             steps {
 
-                // Remplacez par vos commandes de test
+                // Remplacez par vos commandes de testt
 
                 echo 'Running tests...'
 
