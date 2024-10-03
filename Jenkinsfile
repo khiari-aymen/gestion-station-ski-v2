@@ -29,7 +29,8 @@ pipeline {
             steps {
                 // Remplacez par vos commandes de déploiement
                 echo 'Deploying the application...'
-                // sh 'scp target/my-app.jar user@server:/path/to/deploy' (par exemple pour un déploiement via SCP)
+                // sh 'scp target/my-app.jar user@server:/path/to/deploy' (par exemple pour un déploiement via SCP) 
+                //hIIIiiii
             }
         }
     }
