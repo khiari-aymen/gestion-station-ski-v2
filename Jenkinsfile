@@ -1,30 +1,36 @@
 pipeline {
     agent any
-
-    // Déclencheur basé sur un changement dans le dépôt Git
-    triggers {
-        pollSCM('* * * * *') // Vérifie chaque minute les modifications dans le dépôt
-    }
-
+ 
     stages {
         stage('Checkout') {
             steps {
-                // Récupère le code source du dépôt Git
-                git branch: 'BOUABDALLAHMohamed-ERP-BI5-opsight', url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git'
+                // Cette étape vérifie le code source du dépôt
+                git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'BOUABDALLAHMohamed-ERP-BI5-opsight'
             }
         }
-
-    }
-
-    post {
-        always {
-            echo 'Pipeline terminé'
+ 
+        stage('Build') {
+            steps {
+                // Remplacez par vos commandes de build (par exemple, pour Maven, npm, etc.)
+                echo 'Building the project...'
+                // sh 'mvn clean install' (par exemple pour un projet Maven)
+            }
         }
-        success {
-            echo 'Le build a réussi !'
+ 
+        stage('Test') {
+            steps {
+                // Remplacez par vos commandes de test
+                echo 'Running tests...'
+                // sh 'mvn test' (par exemple pour les tests unitaires avec Maven)
+            }
         }
-        failure {
-            echo 'Le build a échoué.'
+ 
+        stage('Deploy') {
+            steps {
+                // Remplacez par vos commandes de déploiement
+                echo 'Deploying the application...'
+                // sh 'scp target/my-app.jar user@server:/path/to/deploy' (par exemple pour un déploiement via SCP)
+            }
         }
     }
 }
