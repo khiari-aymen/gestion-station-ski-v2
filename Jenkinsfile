@@ -1,39 +1,73 @@
 pipeline {
     agent any
 
+    environment {
+        // Ajoutez les informations d'identification SonarQube
+        SONARQUBE_SERVER = 'SonarQube_Server'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
+        SONARQUBE_TOKEN = credentials('sonarqube-token') // Configurez votre token d'accès SonarQube dans Jenkins
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Cette étape vérifie le code source du dépôt
+                echo 'Cloning the repository...'
                 git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'AymenKHIARI-5BI5-Opsight'
+            }
+        }
 
+        stage('Clean') {
+            steps {
+                echo 'Cleaning the project...'
+                sh 'mvn clean'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                echo 'Compiling the project...'
+                sh 'mvn compile'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Analyzing the project with SonarQube...'
+                withSonarQubeEnv('SonarQube_Server') { // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
+                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN'
+                }
             }
         }
 
         stage('Build') {
             steps {
-                // Remplacez par vos commandes de build (par exemple, pour Maven, npm, etc.)
                 echo 'Building the project...'
-                // sh 'mvn clean install' (par exemple pour un projet Maven)
+                sh 'mvn clean install'
             }
         }
 
         stage('Test') {
             steps {
-                // Remplacez par vos commandes de test
                 echo 'Running tests...'
-                // sh 'mvn test' (par exemple pour les tests unitaires avec Maven)
+                sh 'mvn test'
             }
         }
 
         stage('Deploy') {
             steps {
-                // Remplacez par vos commandes de déploiement
                 echo 'Deploying the application...'
-                // sh 'scp target/my-app.jar user@server:/path/to/deploy' (par exemple pour un déploiement via SCP)
+                // Ajoutez ici votre commande de déploiement
+                // Exemple : sh 'scp target/my-app.jar user@server:/path/to/deploy'
             }
         }
     }
-}
 
+    post {
+        success {
+            echo 'Build and analysis completed successfully!'
+        }
+        failure {
+            echo 'Build or analysis failed.'
+        }
+    }
+}
 
