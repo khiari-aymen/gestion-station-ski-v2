@@ -32,7 +32,7 @@ pipeline {
            steps {
                echo 'Executing SonarQube analysis...'
               withSonarQubeEnv(SONARQUBE_SERVER) {
-                   sh 'mvn sonar:sonar -Dsonar.projectKey= erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000 -Dsonar.login= squ_41b445af0fe2aa032f8e205670c0049764e83e07 '
+                   sh 'mvn sonar:sonar -Dsonar.projectKey= erp-bi5-opsight-station-ski-Dsonar.host.url=http://192.168.50.4:9000 -Dsonar.login=squ_41b445af0fe2aa032f8e205670c0049764e83e07'
                }
            }
        }
