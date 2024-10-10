@@ -4,14 +4,14 @@ pipeline {
     environment {
         // Ajoutez les informations d'identification SonarQube
         SONARQUBE_SERVER = 'sonar'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
-        SONARQUBE_TOKEN = credentials('jenkins.sonar’) // Configurez votre token d'accès SonarQube dans Jenkins
+        SONARQUBE_TOKEN = credentials('jenkins.sonar') // Configurez votre token d'accès SonarQube dans Jenkins
     }
  
     stages {
         stage('Checkout') {
             steps {
                 echo 'Cloning the repository...'
-                git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: ' EyaELBEHI-5bi5-opsight'
+                git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'EyaELBEHI-5bi5-opsight'
             }
         }
  
