@@ -1,42 +1,44 @@
 pipeline {
-   agent any
+    agent any
  
-   environment {
-       // Remplacez 'SonarQubeServer' par le nom exact de votre serveur SonarQube défini dans Jenkins
-       SONARQUBE_SERVER = 'SonarQubeServer'
-   }
+    environment {
+        // Ajoutez les informations d'identification SonarQube
+        SONARQUBE_SERVER = 'SonarQubeServer'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
+        SONARQUBE_TOKEN = credentials('SonarToken') // Configurez votre token d'accès SonarQube dans Jenkins
+    }
  
-   stages {
-       stage('Checkout') {
-           steps {
-               // **Cette étape vérifie le code source du dépôt
-               git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'BOUABDALLAHMohamed-ERP-BI5-opsight'
-           }
-       }
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Cloning the repository...'
+                git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: ' BOUABDALLAHMohamed-ERP-BI5-opsight'
+            }
+        }
  
-       stage('MVN Clean') {
-           steps {
-               echo 'Executing mvn clean...'
-               sh 'mvn clean'
-           }
-       }
+        stage('Clean') {
+            steps {
+                echo 'Cleaning the project...'
+                sh 'mvn clean'
+            }
+        }
  
-       stage('MVN Compile') {
-           steps {
-               echo 'Executing mvn compile...'
-               sh 'mvn compile'
-           }
-       }
+        stage('Compile') {
+            steps {
+                echo 'Compiling the project...'
+                sh 'mvn compile'
+            }
+        }
  
-       stage('MVN SonarQube') {
-           steps {
-               echo 'Executing SonarQube analysis...'
-              withSonarQubeEnv(SONARQUBE_SERVER) {
-                   sh 'mvn sonar:sonar -Dsonar.projectKey= erp-bi5-opsight-station-ski-Dsonar.host.url=http://192.168.50.4:9000 -Dsonar.login=squ_41b445af0fe2aa032f8e205670c0049764e83e07'
-               }
-           }
-       }
-     stage('Build') {
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Analyzing the project with SonarQube...'
+                withSonarQubeEnv('SonarQube_Server') { // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
+                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000/'
+                }
+            }
+        }
+ 
+        stage('Build') {
             steps {
                 echo 'Building the project...'
                // sh 'mvn clean install'
@@ -68,4 +70,5 @@ pipeline {
         }
     }
 }
+
 
