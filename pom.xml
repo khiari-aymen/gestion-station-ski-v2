@@ -74,7 +74,7 @@
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.7.0.1746</version> <!-- Version compatible avec Java 11 -->
+                <version>3.20..1.3329</version> <!-- Version compatible avec Java 11 -->
             </plugin>
         </plugins>
     </build>
