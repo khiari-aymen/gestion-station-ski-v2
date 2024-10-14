@@ -33,7 +33,7 @@ pipeline {
             steps {
                 echo 'Analyzing the project with SonarQube...'
                 withSonarQubeEnv('SonarQubeServer') { // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
-                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000/'
+                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.51.4:9000/'
                 }
             }
         }
