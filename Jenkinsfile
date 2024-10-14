@@ -32,8 +32,8 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo 'Analyzing the project with SonarQube...'
-                withSonarQubeEnv('sq1') { // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
-                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://<votre-sonarqube-url>'
+                withSonarQubeEnv('sq1') { 
+                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000'
                 }
             }
         }
@@ -42,9 +42,6 @@ pipeline {
     post {
         always {
             echo 'Pipeline finished.'
-        }
-        success {
-            echo 'SonarQube analysis completed successfully!'
         }
         failure {
             echo 'Pipeline failed!'
