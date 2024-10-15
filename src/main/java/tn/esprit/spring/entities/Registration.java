@@ -2,11 +2,11 @@ package tn.esprit.spring.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Entity; // Remplacer javax.persistence par jakarta.persistence
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+
 @Getter
 @Setter
 @ToString
@@ -32,7 +33,8 @@ public class Registration implements Serializable {
 
 	@JsonIgnore
 	@ManyToOne
-    Skier skier;
+	Skier skier;
+
 	@JsonIgnore
 	@ManyToOne
 	Course course;

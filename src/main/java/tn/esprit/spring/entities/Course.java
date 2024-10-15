@@ -3,7 +3,7 @@ package tn.esprit.spring.entities;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.*;
+import jakarta.persistence.*; // Remplacer javax.persistence par jakarta.persistence
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+
 @Getter
 @Setter
 @AllArgsConstructor
