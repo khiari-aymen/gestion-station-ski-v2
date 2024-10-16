@@ -77,7 +77,10 @@
 </plugin>
 </plugins>
 </build>
- 
->>>>>>> bda00e6 (modif pom.xml)
+<!-- Configuration du dépôt Nexus -->
+<distributionManagement><repository><id>deploymentRepo</id><name>Nexus Repository</name><url>http://localhost:8081/repository/maven-releases/
+</url></repository><snapshotRepository><id>deploymentRepoSnapshots</id><name>Nexus Snapshot Repository</name><url>http://localhost:8081/repository/maven-snapshots/</url></snapshotRepository
+></distributionManagement>
+
 </project>
 
