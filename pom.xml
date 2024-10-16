@@ -77,7 +77,7 @@
 </plugin>
 </plugins>
 </build>
-<!-- Configuration du dépôt Nexus pimita  vagrant -->
+<!-- Configuration du dépôt Nexusv pimita  vagrant -->
 <distributionManagement><repository><id>deploymentRepo</id><name>Nexus Repository</name><url>http://localhost:8081/repository/maven-releases/
 </url></repository><snapshotRepository><id>deploymentRepoSnapshots</id><name>Nexus Snapshot Repository</name><url>http://localhost:8081/repository/maven-snapshots/</url></snapshotRepository
 ></distributionManagement>
