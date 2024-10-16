@@ -42,15 +42,7 @@ pipeline {
                 echo 'Building the project...'
                 sh 'mvn clean deploy -DskipTests'
             }
-        }
- 
-        stage('Build') {
-            steps {
-                echo 'Building the project...'
-               // sh 'mvn clean install'
-            }
-        }
- 
+        } 
         stage('Test') {
             steps {
                 echo 'Running tests...'
