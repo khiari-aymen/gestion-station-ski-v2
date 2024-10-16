@@ -2,7 +2,7 @@ pipeline {
     agent any
  
     environment {
-        // Ajoutez les informations d'identification SonarQube
+        // Ajoutez les informations d'identification SonarQube3333
         SONARQUBE_SERVER = 'sonarServer'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
         SONARQUBE_TOKEN = credentials('sonarToken') // Configurez votre token d'accès SonarQube dans Jenkins
     }
