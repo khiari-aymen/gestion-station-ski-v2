@@ -55,7 +55,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying the application...'
-                // Ajoutez ici votre commande de déploiement
+                //** Ajoutez ici votre commande de déploiement
                 // Exemple : sh 'scp target/my-app.jar user@server:/path/to/deploy'
             }
         }
