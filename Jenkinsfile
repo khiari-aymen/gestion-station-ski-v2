@@ -4,7 +4,7 @@ pipeline {
     environment {
         // Ajoutez les informations d'identification SonarQube
         SONARQUBE_SERVER = 'sq1'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
-        SONARQUBE_TOKEN = credentials('jenkins-sonaar') // Configurez votre token d'accès SonarQube dans Jenkins
+        SONARQUBE_TOKEN = credentials('jenkins-sonaaar') // Configurez votre token d'accès SonarQube dans Jenkins
     }
 
     stages {
