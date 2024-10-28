@@ -46,19 +46,20 @@ pipeline {
         }
 
         stage('Building image') {
-            steps {
-                script {
-                    docker.build("lindaboukhit/achat:1.0.0", ".")
-                }
-            }
+    steps {
+        script {
+            docker.build("lindaboukhit/gestion-station-ski:1.2", ".")
         }
+    }
+}
+
 
         stage('Push image to Docker Hub') {
     steps {
-        withCredentials([string(credentialsId: 'docker-hub-credentials', variable: 'DOCKER_TOKEN')]) {  // Replace 'docker-hub-token' with your actual credentials ID
+        withCredentials([string(credentialsId: 'docker-hub-credentials', variable: 'DOCKER_TOKEN')]) {
             sh '''
                 echo $DOCKER_TOKEN | docker login -u lindaboukhit --password-stdin
-                docker push lindaboukhit/achat:1.0.0
+                docker push lindaboukhit/gestion-station-ski:1.2
             '''
         }
     }
