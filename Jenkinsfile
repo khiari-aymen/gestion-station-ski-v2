@@ -50,6 +50,26 @@ pipeline {
                 //sh 'mvn test'
             }
         }
+	
+	stage('Building image') {
+    	    steps {
+                script {
+                    docker.build("khiari11/achat:1.0.0", ".")
+        	}
+    	    }
+	}
+
+	stage('Push image to Docker Hub') {
+    	    steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', variable: 'DOCKER_TOKEN')]) {
+                sh '''
+
+                     echo $DOCKER_TOKEN | docker login -u khiari11 --password-stdin
+                     docker push khiari11/achat:1.0.0
+            	'''
+                }
+    	    }
+	}
 
         stage('Deploy') {
             steps {
