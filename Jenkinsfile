@@ -54,15 +54,15 @@ pipeline {
         }
 
         stage('Push image to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                        docker push lindaboukhit/achat:1.0.0
-                    '''
-                }
-            }
+    steps {
+        withCredentials([string(credentialsId: 'docker-hub-credentials', variable: 'DOCKER_TOKEN')]) {  // Replace 'docker-hub-token' with your actual credentials ID
+            sh '''
+                echo $DOCKER_TOKEN | docker login -u lindaboukhit --password-stdin
+                docker push lindaboukhit/achat:1.0.0
+            '''
         }
+    }
+}
 
         stage('Deploy') {
             steps {
