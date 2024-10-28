@@ -49,27 +49,6 @@ pipeline {
                 sh 'mvn clean deploy -DskipTests'
             }
         }
-
-        stage('Building Image') {
-            steps {
-                script {
-                    echo 'Building Docker image...'
-                    docker.build("elbehieya/achat:1.0.0", ".")
-                }
-            }
-        }
-
-        stage('Push Image to Docker Hub') {
-            steps {
-                withCredentials([string(credentialsId: 'docker-hub-token', variable: 'DOCKER_TOKEN')]) {
-                    sh '''
-                    echo $DOCKER_TOKEN | docker login -u your_docker_username --password-stdin
-                    docker push your_docker_username/achat:1.0.0
-                    '''
-                }
-            }
-        }
-
         stage('Test') {
             steps {
                 echo 'Running tests...'
