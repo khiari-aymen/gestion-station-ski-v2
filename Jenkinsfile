@@ -51,6 +51,13 @@ pipeline {
                 //sh 'mvn test'
             }
         }
+	stage('Building image') {
+            steps {
+        script {
+            docker.build("elbehieya/achat:1.0.0", ".")
+        }
+   	 }
+	}
  
         stage('Deploy') {
             steps {
