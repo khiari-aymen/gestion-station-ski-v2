@@ -2,6 +2,6 @@ FROM openjdk:17-jdk-slim
 
 EXPOSE 8082
 
-ADD target/achat-1.0.jar achat-1.0.jar
+ADD target/gestion-station-ski-1.2.jar gestion-station-ski.jar
 
-ENTRYPOINT ["java", "-jar", "/achat-1.0.jar"]
+ENTRYPOINT ["java", "-jar", "/gestion-station-ski.jar"]
