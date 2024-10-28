@@ -1,12 +1,12 @@
 pipeline {
     agent any
- 
+
     environment {
-        // Aaajoutez les informations d'identification SonarQube
-        SONARQUBE_SERVER = 'sonar'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
-        SONARQUBE_TOKEN = credentials('jenkins.sonar') // Configurez votre token d'accès SonarQube dans Jenkins
+        // Add SonarQube credentials
+        SONARQUBE_SERVER = 'sonar' // Replace with your SonarQube server name in Jenkins
+        SONARQUBE_TOKEN = credentials('jenkins.sonar') // Replace with your SonarQube token ID
     }
- 
+
     stages {
         stage('Checkout') {
             steps {
@@ -14,26 +14,31 @@ pipeline {
                 git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'ELBEHIEya-ERP-BI5-opsight'
             }
         }
- 
+
         stage('Clean') {
             steps {
                 echo 'Cleaning the project...'
                 sh 'mvn clean'
             }
         }
- 
+
         stage('Compile') {
             steps {
                 echo 'Compiling the project...'
                 sh 'mvn compile'
             }
         }
- 
+
         stage('SonarQube Analysis') {
             steps {
                 echo 'Analyzing the project with SonarQube...'
-                withSonarQubeEnv('sonar') { // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
-                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000/'
+                withSonarQubeEnv('sonar') { 
+                    sh '''
+                    mvn sonar:sonar \
+                        -Dsonar.login=$SONARQUBE_TOKEN \
+                        -Dsonar.projectKey=erp-bi5-opsight-station-ski \
+                        -Dsonar.host.url=http://192.168.50.4:9000/
+                    '''
                 }
             }
         }
@@ -43,44 +48,45 @@ pipeline {
                 echo 'Building the project...'
                 sh 'mvn clean deploy -DskipTests'
             }
-        
-	}
- 	stage('Push image to Docker Hub') {
-            steps {
-               withCredentials([string(credentialsId: 'docker-hub-token', variable: 'DOCKER_TOKEN')]) {
-               sh '''
-                echo $DOCKER_TOKEN | docker login -u votre_nom_d'utilisateur --password-stdin
-                docker push votre_nom_d'utilisateur/achat:1.0.0
-            '''
-        }
-    }
-}
+        }
 
+        stage('Building Image') {
+            steps {
+                script {
+                    echo 'Building Docker image...'
+                    docker.build("elbehieya/achat:1.0.0", ".")
+                }
+            }
+        }
 
- 
+        stage('Push Image to Docker Hub') {
+            steps {
+                withCredentials([string(credentialsId: 'docker-hub-token', variable: 'DOCKER_TOKEN')]) {
+                    sh '''
+                    echo $DOCKER_TOKEN | docker login -u your_docker_username --password-stdin
+                    docker push your_docker_username/achat:1.0.0
+                    '''
+                }
+            }
+        }
+
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                //sh 'mvn test'
+                // Uncomment the following line to enable tests
+                // sh 'mvn test'
             }
         }
-	stage('Building image') {
-            steps {
-        script {
-            docker.build("elbehieya/achat:1.0.0", ".")
-        }
-   	 }
-	}
- 
+
         stage('Deploy') {
             steps {
                 echo 'Deploying the application...'
-                // Ajoutez ici votre commande de déploiement
-                // Exemple : sh 'scp target/my-app.jar user@server:/path/to/deploy'
+                // Add your deployment command here
+                // Example: sh 'scp target/my-app.jar user@server:/path/to/deploy'
             }
         }
     }
- 
+
     post {
         success {
             echo 'Build and analysis completed successfully!'
@@ -90,5 +96,4 @@ pipeline {
         }
     }
 }
-
 
