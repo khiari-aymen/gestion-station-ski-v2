@@ -43,7 +43,20 @@ pipeline {
                 echo 'Building the project...'
                 sh 'mvn clean deploy -DskipTests'
             }
-        }
+        
+	}
+ 	stage('Push image to Docker Hub') {
+            steps {
+               withCredentials([string(credentialsId: 'docker-hub-token', variable: 'DOCKER_TOKEN')]) {
+               sh '''
+                echo $DOCKER_TOKEN | docker login -u votre_nom_d'utilisateur --password-stdin
+                docker push votre_nom_d'utilisateur/achat:1.0.0
+            '''
+        }
+    }
+}
+
+
  
         stage('Test') {
             steps {
