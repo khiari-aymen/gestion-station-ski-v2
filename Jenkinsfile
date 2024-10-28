@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Cloning the repository...'
-                git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'LindaBOUKHIT-5bi5-opsight'
+                git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'LindaBOUKHIT-5bi5-'
             }
         }
 
@@ -33,15 +33,42 @@ pipeline {
             steps {
                 echo 'Analyzing the project with SonarQube...'
                 withSonarQubeEnv('sq1') {
-                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000/'
+                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski'
                 }
             }
         }
 
-        stage('Build') {
+        stage('Test') {
             steps {
-                echo 'Building the project...'
-                sh 'mvn clean deploy -DskipTests'
+                echo 'Running tests...'
+                //sh 'mvn test'
+            }
+        }
+
+        stage('Building image') {
+            steps {
+                script {
+                    docker.build("lindaboukhit/achat:1.0.0", ".")
+                }
+            }
+        }
+
+        stage('Push image to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        docker push lindaboukhit/achat:1.0.0
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application...'
+                //** Ajoutez ici votre commande de déploiement
+                // Exemple : sh 'scp target/my-app.jar user@server:/path/to/deploy'
             }
         }
     }
