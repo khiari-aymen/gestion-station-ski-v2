@@ -52,34 +52,7 @@ pipeline {
                 //sh 'mvn test'
             }
         }
-        stage('Building image') {
-            steps {
-                script {
-                docker.build("ons521/achat:1.0.0", ".")
-                }
-            }
-        }
-        stage('Push image to Docker Hub') {
-
-            steps {
-
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-
-                sh '''
-
-                echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-
-                docker push votre_nom_d'utilisateur/achat:1.0.0
-
-                 '''
-
-                 }
-
-              }
-
-          }
-
-  
+         
         stage('Deploy') {
             steps {
                 echo 'Deploying the application...'
