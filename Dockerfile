@@ -1,4 +1,4 @@
 FROM openjdk:17-jdk-slim
 EXPOSE 8082
-ADD target/achat-1.0.jar achat-1.0.jar
-ENTRYPOINT ["java"."-jar","/achat-1.0.jar"]
+ADD target/timesheet-devops-1.0.jar timesheet-devops-1.0.jar
+ENTRYPOINT ["java"."-jar","/timesheet-devops-1.0.jar"]
