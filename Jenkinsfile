@@ -1,14 +1,14 @@
 pipeline {
-    agent none // On spécifie 'none' au niveau du pipeline pour permettre des agents spécifiques par étape
+    agent any
  
     environment {
-        SONARQUBE_SERVER = 'SonarQubeServer'  // Nom du serveur SonarQube configuré dans Jenkins
-        SONARQUBE_TOKEN = credentials('SonarToken') // Token d'accès SonarQube
+        // Ajoutez les informations d'identification SonarQube
+        SONARQUBE_SERVER = 'SonarQubeServer'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
+        SONARQUBE_TOKEN = credentials('SonarToken') // Configurez votre token d'accès SonarQube dans Jenkins
     }
  
     stages {
         stage('Checkout') {
-            agent { label 'build-agent' } // Utilise un agent spécifique pour cette étape
             steps {
                 echo 'Cloning the repository...'
                 git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'BOUABDALLAHMohamed-ERP-BI5-opsight'
@@ -16,7 +16,6 @@ pipeline {
         }
  
         stage('Clean') {
-            agent { label 'build-agent' }
             steps {
                 echo 'Cleaning the project...'
                 sh 'mvn clean'
@@ -24,7 +23,6 @@ pipeline {
         }
  
         stage('Compile') {
-            agent { label 'build-agent' }
             steps {
                 echo 'Compiling the project...'
                 sh 'mvn compile'
@@ -32,25 +30,20 @@ pipeline {
         }
  
         stage('SonarQube Analysis') {
-            agent { label 'analysis-agent' } // Spécifie un autre agent pour l’analyse SonarQube
             steps {
                 echo 'Analyzing the project with SonarQube...'
-                withSonarQubeEnv('SonarQubeServer') {
+                withSonarQubeEnv('SonarQubeServer') { // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
                     sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.51.4:9000/'
                 }
             }
         }
- 
-        stage('Build') {
-            agent { label 'build-agent' }
+	stage('Build') {
             steps {
                 echo 'Building the project...'
                 sh 'mvn clean deploy -DskipTests'
             }
-        }
- 
+        } 
         stage('Test') {
-            agent { label 'test-agent' } // Utilise un agent dédié aux tests si configuré
             steps {
                 echo 'Running tests...'
                 //sh 'mvn test'
@@ -58,10 +51,9 @@ pipeline {
         }
  
         stage('Deploy') {
-            agent { label 'deploy-agent' } // Utilise un agent de déploiement
             steps {
                 echo 'Deploying the application...'
-                // Commande de déploiement
+                //** Ajoutez ici votre commande de déploiement
                 // Exemple : sh 'scp target/my-app.jar user@server:/path/to/deploy'
             }
         }
