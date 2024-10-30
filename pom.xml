@@ -85,10 +85,6 @@
 		</plugins>
 	</build>
 
-	<properties>
-              <sonar.login>sqa_28e906d2b4173d23316dc60e62870a439da07f05</sonar.login>
-        </properties>
-
 		<!-- Configuration du dépôt Nexus -->
     		<distributionManagement>
         		<repository>
