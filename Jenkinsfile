@@ -4,7 +4,7 @@ pipeline {
     environment {
         SONARQUBE_SERVER = 'SonarQube_Server'
         SONARQUBE_TOKEN = credentials('sonarqube-token')
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')  // Assurez-vous de créer cet identifiant dans Jenkins
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         IMAGE_NAME = 'khiari11/station-ski'
         IMAGE_TAG = 'latest'
     }
@@ -58,9 +58,9 @@ pipeline {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
                 script {
-                    docker.withRegistry('', 'docker-hub-credentials') {
-                        sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
-                    }
+                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker logout"
                 }
             }
         }
@@ -69,9 +69,10 @@ pipeline {
             steps {
                 echo 'Deploying the application with Docker Compose...'
                 script {
-		    docker.withRegistry('', 'docker-hub-credentials')
+                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
                     sh 'docker-compose down'
                     sh 'docker-compose up -d'
+                    sh "docker logout"
                 }
             }
         }

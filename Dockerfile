@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y netcat && apt-get clean
 EXPOSE 8082
  
 # Ajouter le fichier JAR à l'image
-ADD ./target/gestion-station-ski-1.1.7.jar gestion-station-ski-1.1.7.jar
+ADD ./target/gestion-station-ski-1.1.8.jar gestion-station-ski-1.1.8.jar
  
 # Point d'entrée pour démarrer l'application
-ENTRYPOINT ["java", "-jar", "gestion-station-ski-1.1.7.jar"]
+ENTRYPOINT ["java", "-jar", "gestion-station-ski-1.1.8.jar"]
