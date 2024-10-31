@@ -58,7 +58,7 @@ pipeline {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
                 script {
-                    docker.withRegistry('', 'docker-hub-credentials') {
+                    docker.withRegistry('', DOCKER_HUB_CREDENTIALS) {
                         sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                     }
                 }
@@ -69,14 +69,11 @@ pipeline {
             steps {
                 echo 'Deploying the application with Docker Compose...'
                 script {
-                    docker.withRegistry('', 'docker-hub-credentials') {
-                        sh 'docker-compose down'
-                        sh 'docker-compose up -d'
-                    }
+                    sh 'docker-compose down'
+                    sh 'docker-compose up -d'
                 }
             }
-        }
-        
+        }
     }
 
     post {
