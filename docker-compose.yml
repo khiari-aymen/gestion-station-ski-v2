@@ -21,7 +21,7 @@ services:
       echo "Waiting for MySQL database connection...";
       sleep 5;
       done;
-      java -jar /gestion-station-ski-1.1.5.jar'
+      java -jar /gestion-station-ski-1.1.6.jar'
 
   mysqldb:
     image: mysql:8.0
