@@ -6,7 +6,7 @@ services:
       context: .  # Assurez-vous que le contexte est correct
       dockerfile: Dockerfile
     ports:
-      - "8082:8082"  # Port de l'application
+      - "8089:8089"  # Port de l'application
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stationSki?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
@@ -18,7 +18,7 @@ services:
       mysqldb:
         condition: service_healthy
     entrypoint: >
-      sh -c 'java -jar /gestion-station-ski-1.2.0.jar'
+      sh -c 'java -jar /gestion-station-ski-1.2.1.jar'
 
   mysqldb:
     image: mysql:8.0
