@@ -10,18 +10,15 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stationSki?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_PASSWORD:
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5InnoDBDialect
     depends_on:
-      - mysqldb
+      mysqldb:
+        condition: service_healthy
     entrypoint: >
-      sh -c 'until nc -z -v -w60 mysqldb 3306; do
-      echo "Waiting for MySQL database connection...";
-      sleep 5;
-      done;
-      java -jar /gestion-station-ski-1.1.9.jar'
+      sh -c 'java -jar /gestion-station-ski-1.2.0.jar'
 
   mysqldb:
     image: mysql:8.0
@@ -32,6 +29,11 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
 
 volumes:
   mysql_data:
