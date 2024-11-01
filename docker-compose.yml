@@ -18,7 +18,7 @@ services:
       mysqldb:
         condition: service_healthy
     entrypoint: >
-      sh -c 'java -jar /gestion-station-ski-1.2.1.jar'
+      sh -c 'java -jar /gestion-station-ski-1.2.2.jar'
 
   mysqldb:
     image: mysql:8.0
