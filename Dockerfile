@@ -1,13 +1,5 @@
 FROM openjdk:17-jdk-slim
- 
-# Installez netcat pour vérifier la connectivité
 RUN apt-get update && apt-get install -y netcat && apt-get clean
- 
-# Exposer le port de l'application
 EXPOSE 8089
- 
-# Ajouter le fichier JAR à l'image
-ADD ./target/gestion-station-ski-1.2.3.jar gestion-station-ski-1.2.3.jar
- 
-# Point d'entrée pour démarrer l'application
-ENTRYPOINT ["java", "-jar", "gestion-station-ski-1.2.3.jar"]
+ADD ./target/gestion-station-ski-1.2.4.jar gestion-station-ski-1.2.4.jar
+ENTRYPOINT ["java", "-jar", "gestion-station-ski-1.2.4.jar"]
