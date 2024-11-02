@@ -1,6 +1,6 @@
 services:
   app:
-    #image: khiari11/station-ski:latest  # Nom de l'image Docker de votre application
+    image: khiari11/station-ski:latest  # Nom de l'image Docker de votre application
     build:
       context: .  # Assurez-vous que le contexte est correct
       dockerfile: Dockerfile
