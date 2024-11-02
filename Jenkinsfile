@@ -5,6 +5,9 @@ pipeline {
         // Ajoutez les informations d'identification SonarQube
         SONARQUBE_SERVER = 'sq1'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
         SONARQUBE_TOKEN = credentials('jenkins-sonaaar') // Configurez votre token d'accès SonarQube dans Jenkins
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
+        IMAGE_NAME = 'LindaBOUKHIT/station-ski'
+        IMAGE_TAG = 'latest'
     }
 
     stages {
@@ -54,22 +57,34 @@ pipeline {
 }
 
 
-        stage('Push image to Docker Hub') {
-    steps {
-        withCredentials([string(credentialsId: 'docker-hub-credentials', variable: 'DOCKER_TOKEN')]) {
-            sh '''
-                echo $DOCKER_TOKEN | docker login -u lindaboukhit --password-stdin
-                docker push lindaboukhit/gestion-station-ski:1.2
-            '''
-        }
-    }
-}
-
-        stage('Deploy') {
+       
+        stage('Build Docker Image') {
             steps {
-                echo 'Deploying the application...'
-                //** Ajoutez ici votre commande de déploiement
-                // Exemple : sh 'scp target/my-app.jar user@server:/path/to/deploy'
+                echo 'Building Docker Image...'
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                echo 'Pushing Docker Image to Docker Hub...'
+                script {
+                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker logout"
+                }
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                echo 'Deploying the application with Docker Compose...'
+                script {
+                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                    sh 'docker compose down'
+                    sh 'docker compose up -d'
+                    sh "docker logout"
+                }
             }
         }
     }
