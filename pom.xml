@@ -10,7 +10,7 @@
 </parent>
 <groupId>tn.esprit.spring</groupId>
 <artifactId>gestion-station-ski</artifactId>
-<version>1.1.7</version>
+<version>1.1.8</version>
 <name>gestion-station-ski</name>
 <description>Demo project for Spring Boot</description>
 <properties>
@@ -52,6 +52,10 @@
 <groupId>org.springframework.boot</groupId>
 <artifactId>spring-boot-starter-test</artifactId>
 <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
 </dependency>
 </dependencies>
  
