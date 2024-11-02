@@ -3,7 +3,7 @@ package tn.esprit.spring.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import jakarta.persistence.*; // Remplacer javax.persistence par jakarta.persistence
+import javax.persistence.*;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-
 @Getter
 @Setter
 @ToString
@@ -28,7 +27,7 @@ public class Subscription implements Serializable {
 	LocalDate startDate;
 	LocalDate endDate;
 	Float price;
-	// @Enumerated(EnumType.STRING)
-	TypeSubscription typeSub; // Assurez-vous que TypeSubscription est également adapté si nécessaire
+//	@Enumerated(EnumType.STRING)
+	TypeSubscription typeSub;
 
 }
