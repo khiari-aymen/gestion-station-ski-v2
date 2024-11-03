@@ -32,5 +32,14 @@ services:
       retries: 5
       start_period: 30s
 
+ mysqld-exporter:
+    image: prom/mysqld-exporter
+    environment:
+      DATA_SOURCE_NAME: "root:root@tcp(mysqldb:3306)/stationSki"
+    ports:
+      - "9104:9104"  # Port d'écoute de l'exporter
+    depends_on:
+      - mysqldb
+
 volumes:
   mysql_data:
