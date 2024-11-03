@@ -1,6 +1,6 @@
 services:
   app:
-    #image: station-ski:latest  # Nom de l'image Docker de votre application
+    image: station-ski  # Nom de l'image Docker de votre application
     build:
       context: .  # Assurez-vous que le contexte est correct
       dockerfile: Dockerfile
@@ -9,18 +9,24 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stationSki?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_PASSWORD: rootpassword  # Mettre le même mot de passe que dans mysqldb
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5InnoDBDialect
     depends_on:
       mysqldb:
         condition: service_healthy
+    entrypoint: >
+      sh -c 'until nc -z -v -w30 mysqldb 3306; do
+      echo "Waiting for MySQL database connection...";
+      sleep 5;
+      done;
+      java -jar /gestion-station-ski-1.2.jar'
 
   mysqldb:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: rootpassword  # Utilisez un mot de passe sécurisé en production
       MYSQL_DATABASE: stationSki  # Nom de la base de données
     ports:
       - "3306:3306"
@@ -34,8 +40,3 @@ services:
 
 volumes:
   mysql_data:
-
-
-
-
-
