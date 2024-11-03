@@ -79,6 +79,14 @@ pipeline {
     }
 
     post {
+
+	always {
+            echo 'Sending notification email...'
+            emailext to: 'khiari.aymen.1@esprit.tn',
+                     subject: "Jenkins Build: ${currentBuild.currentResult} - ${env.JOB_NAME}",
+                     body: "Status: ${currentBuild.currentResult}\nJob Name: ${env.JOB_NAME}\nMore details: ${env.BUILD_URL}"
+        }
+
         success {
             echo 'Build, Docker image creation, push, and deployment completed successfully!'
         }
