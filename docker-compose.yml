@@ -34,8 +34,8 @@ services:
 
   mysqld-exporter:
     image: prom/mysqld-exporter
-    environment:
-      DATA_SOURCE_NAME: "root:root@(mysqldb:3306)/stationSki"
+    volumes:
+      - ./my.cnf:/etc/my.cnf
     ports:
       - "9104:9104"  # Port d'écoute de l'exporter
     depends_on:
