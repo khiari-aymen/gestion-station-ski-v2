@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 FROM openjdk:17-jdk
+=======
+FROM eclipse-temurin:17-jdk
+
+# Install MySQL client
+RUN apt-get update && apt-get install -y default-mysql-client && rm -rf /var/lib/apt/lists/*
+>>>>>>> e07e73e (besmeleh)
 
 EXPOSE 8082
 

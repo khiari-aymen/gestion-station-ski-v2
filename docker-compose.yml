@@ -1,6 +1,6 @@
 services:
   app:
-    image: ismahen2801/gestion-station-ski:latest  # Nom de l'image Docker de votre application
+    image: station-ski  # Nom de l'image Docker de votre application
     build:
       context: .  # Assurez-vous que le contexte est correct
       dockerfile: Dockerfile
@@ -8,22 +8,36 @@ services:
       - "8089:8089"  # Port de l'application
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stationSki?createDatabaseIfNotExist=true
+<<<<<<< HEAD
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+=======
+      SPRING_DATASOURCE_USERNAME: root  # Nom d'utilisateur pour MySQL
+      SPRING_DATASOURCE_PASSWORD: root  # Pas de mot de passe
+>>>>>>> e07e73e (besmeleh)
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5InnoDBDialect
     depends_on:
       mysqldb:
         condition: service_healthy
+<<<<<<< HEAD
+=======
+    entrypoint: >
+      sh -c 'until mysql -h mysqldb -u root -p"$SPRING_DATASOURCE_PASSWORD" -e "SELECT 1"; do
+      echo "Waiting for MySQL database connection...";
+      sleep 5;
+      done;
+      java -jar /gestion-station-ski-1.0.12.jar'
+>>>>>>> e07e73e (besmeleh)
 
   mysqldb:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root  # Pas de mot de passe pour root
       MYSQL_DATABASE: stationSki  # Nom de la base de données
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
