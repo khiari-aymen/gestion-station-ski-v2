@@ -34,15 +34,15 @@ services:
 
   mysqld-exporter:
     image: prom/mysqld-exporter
+    depends_on:
+      - mysqldb
     command:
       - --config.my-cnf=/cfg/.my.cnf
-      - --mysqld.address=localhost:3306
+      - --mysqld.address=192.168.50.4:3306
     volumes:
       - "./.my.cnf:/cfg/my.cnf"
     ports:
       - "9104:9104"  # Port d'écoute de l'exporter
-    depends_on:
-      - mysqldb
 
 volumes:
   mysql_data:
