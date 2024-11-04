@@ -1,6 +1,33 @@
+version: '3.8'
+
 services:
+  mysqldb:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Utilisez un mot de passe sécurisé en production
+      MYSQL_DATABASE: stationSki  # Nom de la base de données
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+
+  mysqld-exporter:
+    image: prom/mysqld-exporter
+    depends_on:
+      - mysqldb
+    command:
+      - --config.my-cnf=/cfg/my.cnf
+      - --mysqld.address=192.168.50.4:3306
+    volumes:
+      - "./.my.cnf:/cfg/my.cnf"
+    ports:
+      - "9104:9104"  # Port d'écoute de l'exporter
+
   app:
-    image: station-ski  # Nom de l'image Docker de votre application
+    image: station-ski:latest  # Nom de l'image Docker de votre application
     build:
       context: .  # Assurez-vous que le contexte est correct
       dockerfile: Dockerfile
@@ -16,27 +43,6 @@ services:
     depends_on:
       mysqldb:
         condition: service_healthy
-    entrypoint: >
-      sh -c 'until nc -z -v -w30 mysqldb 3306; do
-      echo "Waiting for MySQL database connection...";
-      sleep 5;
-      done;
-      java -jar /gestion-station-ski-1.2.jar'
-
-  mysqldb:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword  # Utilisez un mot de passe sécurisé en production
-      MYSQL_DATABASE: stationSki  # Nom de la base de données
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
 
 volumes:
   mysql_data:

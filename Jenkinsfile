@@ -6,8 +6,9 @@ pipeline {
         SONARQUBE_SERVER = 'sq1'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
         SONARQUBE_TOKEN = credentials('jenkins-sonaaar') // Configurez votre token d'accès SonarQube dans Jenkins
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
-        IMAGE_NAME = 'LindaBOUKHIT/station-ski'
+        IMAGE_NAME = 'station-ski'
         IMAGE_TAG = 'latest'
+      
     }
 
     stages {
@@ -36,35 +37,18 @@ pipeline {
             steps {
                 echo 'Analyzing the project with SonarQube...'
                 withSonarQubeEnv('sq1') {
-                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski'
+                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000/'
                 }
             }
         }
-
-        stage('Test') {
+        
+       stage('Build') {
             steps {
-                echo 'Running tests...'
-                //sh 'mvn test'
+                echo 'Building the project...'
+                sh 'mvn clean deploy -DskipTests'
             }
         }
-
-        stage('Building image') {
-    steps {
-        script {
-            docker.build("lindaboukhit/gestion-station-ski:1.2", ".")
-        }
-    }
-}
-
-
        
-        stage('Build Docker Image') {
-            steps {
-                echo 'Building Docker Image...'
-                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-            }
-        }
-
         stage('Push Docker Image') {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
