@@ -1,47 +1,89 @@
 pipeline {
     agent any
 
+    environment {
+        SONARQUBE_SERVER = 'SonarQube_Server'
+        SONARQUBE_TOKEN = credentials('sonarToken')
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub')
+        IMAGE_NAME = 'ismahen2801/station-ski'
+        IMAGE_TAG = 'latest'
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git',
-                branch: 'IsmahenBENHALIMA-5bi5-opsight'
+                echo 'Cloning the repository...'
+                git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'IsmahenBENHALIMA-5bi5'
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                echo 'Cleaning the project...'
+                sh 'mvn clean'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                echo 'Compiling the project...'
+                sh 'mvn compile'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Analyzing the project with SonarQube...'
+                withSonarQubeEnv('SonarQube_Server') {
+                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000/'
+                }
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Building the project...'
-                sh 'mvn clean compile'
+                sh 'mvn clean deploy -DskipTests'
             }
         }
 
-        stage('SonarQube') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Running SonarQube analysis...'
-                sh 'mvn sonar:sonar'
+                echo 'Building Docker Image...'
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
 
-        stage('Deploy to Nexus') {
+        stage('Push Docker Image') {
             steps {
-                echo 'Deploying artifacts to Nexus...'
-                sh 'mvn deploy -DskipTests -DaltDeploymentRepository=nexus::default::http://192.168.60.130:8081/repository/maven-releases/'
+                echo 'Pushing Docker Image to Docker Hub...'
+                script {
+                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker logout"
+                }
             }
         }
 
-        stage('Test') {
+        stage('Deploy with Docker Compose') {
             steps {
-                echo 'Running tests...'
-                sh 'mvn test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the application...'
+                echo 'Deploying the application with Docker Compose...'
+                script {
+                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                    sh 'docker compose down'
+                    sh 'docker compose up -d'
+                    sh "docker logout"
+                }
             }
         }
     }
-}
 
+    post {
+        success {
+            echo 'Build, Docker image creation, push, and deployment completed successfully!'
+        }
+        failure {
+            echo 'An error occurred during the build or deployment process.'
+        }
+    }
+}
