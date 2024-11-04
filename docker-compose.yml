@@ -1,6 +1,6 @@
 services:
   app:
-    image: station-ski  # Nom de l'image Docker de votre application
+    image: ons521/station-ski:latest  # Nom de l'image Docker de votre application
     build:
       context: .  # Assurez-vous que le contexte est correct
       dockerfile: Dockerfile
@@ -9,34 +9,40 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stationSki?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root  # Mettre le même mot de passe que dans mysqldb
+      SPRING_DATASOURCE_PASSWORD: root
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5InnoDBDialect
     depends_on:
       mysqldb:
         condition: service_healthy
-    entrypoint: >
-      sh -c 'sleep 10; until mysql -h mysqldb -u root -p"${SPRING_DATASOURCE_PASSWORD}" -e "SELECT 1"; do
-      echo "Waiting for MySQL database connection... (Attempting to connect as root)";
-      sleep 5;
-      done;
-      java -jar /gestion-station-ski-1.1.0.jar'
 
   mysqldb:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: root  # Utilisez un mot de passe sécurisé en production
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: stationSki  # Nom de la base de données
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "mysqldb"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 5
       start_period: 30s
+
+  mysqld-exporter:
+    image: prom/mysqld-exporter
+    depends_on:
+      - mysqldb
+    command:
+      - --config.my-cnf=/cfg/my.cnf
+      - --mysqld.address=192.168.50.4:3306
+    volumes:
+      - "./.my.cnf:/cfg/my.cnf"
+    ports:
+      - "9104:9104"  # Port d'écoute de l'exporter
 
 volumes:
   mysql_data:
