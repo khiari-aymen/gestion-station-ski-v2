@@ -32,8 +32,10 @@ scrape_configs:
     static_configs:
       - targets: ['192.168.51.4:8080']
   - job_name: 'spring-boot-app'  # Nom du job pour l'application Spring Boot
+    metrics_path: '/api/actuator/prometheus'
     static_configs:
       - targets: ['192.168.51.4:8089']  # Remplacez par l'IP de votre conteneur Spring Boot
   - job_name: 'mysql'  # Nom du job pour MySQL
+    metrics_path: /prometheus
     static_configs:
       - targets: ['192.168.51.4:3306']  # Remplacez par l'IP de votre conteneur MySQL

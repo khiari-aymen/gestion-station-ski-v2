@@ -2,9 +2,8 @@ pipeline {
     agent any
  
     environment {
-        // Ajoutez les informations d'identification SonarQube
-        SONARQUBE_SERVER = 'SonarQubeServer'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
-        SONARQUBE_TOKEN = credentials('SonarToken') // Configurez votre token d'accès SonarQube dans Jenkins
+        SONARQUBE_SERVER = 'SonarQube_Server'  // Name of the SonarQube server configured in Jenkins
+        SONARQUBE_TOKEN = credentials('sonarqube-token') // SonarQube access token configured in Jenkins
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         IMAGE_NAME = 'bouabdallahmohamed/station-ski'
         IMAGE_TAG = 'latest'
@@ -35,7 +34,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo 'Analyzing the project with SonarQube...'
-                withSonarQubeEnv('SonarQubeServer') {
+                withSonarQubeEnv('SonarQube_Server') {
                     sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.51.4:9000/'
                 }
             }
@@ -51,7 +50,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                // sh 'mvn test' // Décommentez pour exécuter les tests
+                // sh 'mvn test' // Uncomment to run tests
             }
         }
 
@@ -88,7 +87,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying the application...'
-                // Ajoutez ici votre commande de déploiement, par exemple :
+                // Add your deployment command here, for example:
                 // sh 'scp target/my-app.jar user@server:/path/to/deploy'
             }
         }
