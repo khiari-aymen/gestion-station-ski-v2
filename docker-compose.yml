@@ -37,7 +37,7 @@ services:
     depends_on:
       - mysqldb
     command:
-      - --config.my-cnf=/cfg/.my.cnf
+      - --config.my-cnf=/cfg/my.cnf
       - --mysqld.address=192.168.50.4:3306
     volumes:
       - "./.my.cnf:/cfg/my.cnf"

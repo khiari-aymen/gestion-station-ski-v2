@@ -1,4 +1,4 @@
 FROM eclipse-temurin:17-jdk
 EXPOSE 8089
-ADD ./target/gestion-station-ski-1.4.3.jar gestion-station-ski-1.4.3.jar
-ENTRYPOINT ["java", "-jar", "gestion-station-ski-1.4.3.jar"]
+ADD ./target/gestion-station-ski-1.4.4.jar gestion-station-ski-1.4.4.jar
+ENTRYPOINT ["java", "-jar", "gestion-station-ski-1.4.4.jar"]
