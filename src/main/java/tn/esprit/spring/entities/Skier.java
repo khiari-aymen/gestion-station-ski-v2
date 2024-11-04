@@ -2,9 +2,10 @@ package tn.esprit.spring.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.*; // Remplacer javax.persistence par jakarta.persistence
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
@@ -41,7 +42,13 @@ public class Skier implements Serializable {
 			inverseJoinColumns = @JoinColumn(name = "numPiste"))
 	private Set<Piste> pistes;
 
+
 	@OneToMany(mappedBy = "skier")
 	Set<Registration> registrations;
+
+
+
+
+
 
 }

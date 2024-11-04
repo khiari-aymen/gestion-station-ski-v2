@@ -1,4 +1,11 @@
 FROM openjdk:17-jdk-slim
-EXPOSE 8082
-ADD target/timesheet-devops-1.0.jar timesheet-devops-1.0.jar
-ENTRYPOINT ["java","-jar","/timesheet-devops-1.0.jar"]
+
+# Installez le client MySQL
+RUN apt-get update && apt-get install -y default-mysql-client
+
+# Copiez le fichier JAR dans l'image
+COPY ./target/gestion-station-ski-1.1.0.jar /gestion-station-ski-1.1.0.jar
+
+# Commande par défaut pour exécuter l'application
+ENTRYPOINT ["java", "-jar", "/gestion-station-ski-1.1.0.jar"]
+
