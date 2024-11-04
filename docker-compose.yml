@@ -1,23 +1,6 @@
-version: '3.8'  # Spécifiez la version
-
 services:
-  mysqldb:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword  # Mot de passe pour root
-      MYSQL_DATABASE: stationSki  # Nom de la base de données
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
-
   app:
-    image: station-ski  # Nom de l'image Docker de votre application
+    image: station-ski:latest   # Nom de l'image Docker de votre application
     build:
       context: .  # Assurez-vous que le contexte est correct
       dockerfile: Dockerfile
@@ -25,21 +8,41 @@ services:
       - "8089:8089"  # Port de l'application
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stationSki?createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: "root"  # Nom d'utilisateur pour MySQL
-      SPRING_DATASOURCE_PASSWORD: "rootpassword"  # Mot de passe
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpassword
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5InnoDBDialect
     depends_on:
       mysqldb:
         condition: service_healthy
-    entrypoint: >
-      sh -c 'until mysql -h mysqldb -u root -p"$SPRING_DATASOURCE_PASSWORD" -e "SELECT 1"; do
-      echo "Waiting for MySQL database connection...";
-      sleep 5;
-      done;
-      exec java -jar /gestion-station-ski-1.2.7.jar'  # Utiliser exec pour relayer le signal
+
+  mysqldb:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: stationSki  # Nom de la base de données
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+
+  mysqld-exporter:
+    image: prom/mysqld-exporter
+    depends_on:
+      - mysqldb
+    command:
+      - --config.my-cnf=/cfg/my.cnf
+      - --mysqld.address=192.168.50.4:3306
+    volumes:
+      - "./.my.cnf:/cfg/my.cnf"
+    ports:
+      - "9104:9104"  # Port d'écoute de l'exporter
 
 volumes:
   mysql_data:
-

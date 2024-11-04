@@ -2,9 +2,12 @@ pipeline {
     agent any
 
     environment {
-        // Add SonarQube credentials
+        // Add SonarQube and Docker Hub credentials
         SONARQUBE_SERVER = 'sonar' // Replace with your SonarQube server name in Jenkins
         SONARQUBE_TOKEN = credentials('jenkins.sonar') // Replace with your SonarQube token ID
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials') // Replace with your Docker Hub credentials ID
+        IMAGE_NAME = 'stationSki'
+        IMAGE_TAG = 'latest'
     }
 
     stages {
@@ -49,6 +52,7 @@ pipeline {
                 sh 'mvn clean deploy -DskipTests'
             }
         }
+
         stage('Test') {
             steps {
                 echo 'Running tests...'
@@ -57,21 +61,43 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Deploying the application...'
-                // Add your deployment command here
-                // Example: sh 'scp target/my-app.jar user@server:/path/to/deploy'
+                echo 'Building Docker Image...'
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                echo 'Pushing Docker Image to Docker Hub...'
+                script {
+                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker logout"
+                }
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                echo 'Deploying the application with Docker Compose...'
+                script {
+                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                    sh 'docker compose down'
+                    sh 'docker compose up -d'
+                    sh "docker logout"
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Build and analysis completed successfully!'
+            echo 'Build, Docker image creation, push, and deployment completed successfully!'
         }
         failure {
-            echo 'Build or analysis failed.'
+            echo 'An error occurred during the build or deployment process.'
         }
     }
 }
