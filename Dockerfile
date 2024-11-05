@@ -3,8 +3,8 @@ FROM eclipse-temurin:17-jdk
 EXPOSE 8089
 
 # Ajouter le fichier JAR
-ADD ./target/gestion-station-ski-1.5.jar gestion-station-ski-1.5.jar
+ADD ./target/gestion-station-ski-1.6.jar gestion-station-ski-1.6.jar
 
 # Point d'entrée de l'application
-ENTRYPOINT ["java", "-jar", "gestion-station-ski-1.5.jar"]
+ENTRYPOINT ["java", "-jar", "gestion-station-ski-1.6.jar"]
 
