@@ -6,7 +6,7 @@ pipeline {
         SONARQUBE_SERVER = 'sq1'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
         SONARQUBE_TOKEN = credentials('jenkins-sonaaar') // Configurez votre token d'accès SonarQube dans Jenkins
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub')
-        IMAGE_NAME = 'station-ski'
+        IMAGE_NAME = 'lindaboukhit/station-ski'
         IMAGE_TAG = 'latest'
       
     }
