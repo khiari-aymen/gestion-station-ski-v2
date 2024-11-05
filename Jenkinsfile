@@ -2,7 +2,7 @@ pipeline {
     agent any
  
     environment {
-        SONARQUBE_SERVER = 'SonarQube_Server'  // Name of the SonarQube server configured in Jenkins
+        SONARQUBE_SERVER = 'SonarQubeServer'  // Name of the SonarQube server configured in Jenkins
         SONARQUBE_TOKEN = credentials('SonarToken') // SonarQube access token configured in Jenkins
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         IMAGE_NAME = 'bouabdallahmohamed/station-ski'
