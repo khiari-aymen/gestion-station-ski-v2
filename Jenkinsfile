@@ -2,7 +2,7 @@ pipeline {
     agent any
  
     environment {
-        SONARQUBE_SERVER = 'SR'  // Name of the SonarQube server configured in Jenkins
+        SR = 'SR'  // Name of the SonarQube server configured in Jenkins
         SONARQUBE_TOKEN = credentials('SonarToken') // SonarQube access token configured in Jenkins
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         IMAGE_NAME = 'bouabdallahmohamed/station-ski'
@@ -34,7 +34,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo 'Analyzing the project with SonarQube...'
-                withSonarQubeEnv('SONARQUBE_SERVER') {
+                withSonarQubeEnv('SR') {
                     sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.51.4:9000/'
                 }
             }
