@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SONARQUBE_SERVER = 'SonarQube_Server'
-        SONARQUBE_TOKEN = credentials('sonarqube-token')
+        SONARQUBE_TOKEN = credentials('sonarToken')
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         IMAGE_NAME = 'ons521/station-ski'
         IMAGE_TAG = 'latest'
