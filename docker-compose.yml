@@ -27,7 +27,7 @@ services:
       - "9104:9104"  # Port d'écoute de l'exporter
 
   app:
-    image: station-ski:latest  # Nom de l'image Docker de votre application
+    image: lindaboukhit/station-ski:latest  # Nom de l'image Docker de votre application
     build:
       context: .  # Assurez-vous que le contexte est correct
       dockerfile: Dockerfile
