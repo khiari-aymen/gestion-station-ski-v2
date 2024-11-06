@@ -8,7 +8,6 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub')
         IMAGE_NAME = 'lindaboukhit/station-ski'
         IMAGE_TAG = 'latest'
-      
     }
 
     stages {
@@ -42,13 +41,25 @@ pipeline {
             }
         }
         
-       stage('Build') {
+        stage('Build') {
             steps {
                 echo 'Building the project...'
                 sh 'mvn clean deploy -DskipTests'
             }
         }
-       
+
+        stage('Install Docker Compose') {
+            steps {
+                echo 'Installing Docker Compose...'
+                script {
+                    sh '''
+                    curl -L "https://github.com/docker/compose/releases/download/v2.30.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                    chmod +x /usr/local/bin/docker-compose
+                    '''
+                }
+            }
+        }
+
         stage('Push Docker Image') {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
