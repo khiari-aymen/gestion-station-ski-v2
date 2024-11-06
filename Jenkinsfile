@@ -65,8 +65,8 @@ pipeline {
                 echo 'Deploying the application with Docker Compose...'
                 script {
                     sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
-                    sh 'docker compose down'
-                    sh 'docker compose up -d'
+                    sh 'docker-compose down'
+                    sh 'docker-compose up -d'
                     sh "docker logout"
                 }
             }
