@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     image: station-ski  # Nom de l'image Docker de votre application
