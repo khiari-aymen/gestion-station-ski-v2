@@ -1,10 +1,26 @@
-version: '3.8'
-
 services:
+  app:
+    image: lindaboukhit/station-ski:latest  # Nom de l'image Docker de votre application
+    build:
+      context: .  # Assurez-vous que le contexte est correct
+      dockerfile: Dockerfile
+    ports:
+      - "8089:8089"  # Port de l'application
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stationSki?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5InnoDBDialect
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+
   mysqldb:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword  # Utilisez un mot de passe sécurisé en production
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: stationSki  # Nom de la base de données
     ports:
       - "3306:3306"
@@ -13,6 +29,8 @@ services:
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
+      retries: 5
+      start_period: 30s
 
   mysqld-exporter:
     image: prom/mysqld-exporter
@@ -25,24 +43,6 @@ services:
       - "./.my.cnf:/cfg/my.cnf"
     ports:
       - "9104:9104"  # Port d'écoute de l'exporter
-
-  app:
-    image: lindaboukhit/station-ski:latest  # Nom de l'image Docker de votre application
-    build:
-      context: .  # Assurez-vous que le contexte est correct
-      dockerfile: Dockerfile
-    ports:
-      - "8089:8089"  # Port de l'application
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/stationSki?createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: rootpassword  # Mettre le même mot de passe que dans mysqldb
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_SHOW_SQL: "true"
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL5InnoDBDialect
-    depends_on:
-      mysqldb:
-        condition: service_healthy
 
 volumes:
   mysql_data:
