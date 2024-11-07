@@ -11,7 +11,6 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            agent { label 'test-agent' }
             steps {
                 echo 'Cloning the repository...'
                 git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'BOUABDALLAHMohamed-ERP-BI5-opsight'
