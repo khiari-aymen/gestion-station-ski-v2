@@ -34,7 +34,6 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            agent { label 'analysis-agent' }
             steps {
                 echo 'Analyzing the project with SonarQube...'
                 withSonarQubeEnv('SR') {
