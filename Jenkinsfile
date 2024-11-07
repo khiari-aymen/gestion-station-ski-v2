@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         SR = 'SR'  // Name of the SonarQube server configured in Jenkins
         SONARQUBE_TOKEN = credentials('SonarToken') // SonarQube access token configured in Jenkins
@@ -8,7 +7,6 @@ pipeline {
         IMAGE_NAME = 'bouabdallahmohamed/station-ski'
         IMAGE_TAG = 'latest'
     }
-
     stages {
         stage('Checkout') {
             steps {
@@ -16,23 +14,18 @@ pipeline {
                 git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'BOUABDALLAHMohamed-ERP-BI5-opsight'
             }
         }
-
         stage('Clean') {
-            agent { label 'build-agent' }
             steps {
                 echo 'Cleaning the project...'
                 sh 'mvn clean'
             }
         }
-
         stage('Compile') {
-            agent { label 'build-agent' }
             steps {
                 echo 'Compiling the project...'
                 sh 'mvn compile'
             }
         }
-
         stage('SonarQube Analysis') {
             steps {
                 echo 'Analyzing the project with SonarQube...'
@@ -41,33 +34,28 @@ pipeline {
                 }
             }
         }
-
         stage('Build') {
-            agent { label 'build-agent' }
             steps {
                 echo 'Building the project...'
                 sh 'mvn clean deploy -DskipTests'
             }
         }
-
+ 
         stage('Test') {
-            agent { label 'test-agent' }
             steps {
                 echo 'Running tests...'
                 // sh 'mvn test' // Uncomment to run tests
             }
         }
-
+ 
         stage('Build Docker Image') {
-            agent { label 'build-agent' }
             steps {
                 echo 'Building Docker Image...'
                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
-
+ 
         stage('Push Docker Image') {
-            agent { label 'deploy-agent' }
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
                 script {
@@ -77,9 +65,8 @@ pipeline {
                 }
             }
         }
-
+ 
         stage('Deploy with Docker Compose') {
-            agent { label 'deploy-agent' }
             steps {
                 echo 'Deploying the application with Docker Compose...'
                 script {
@@ -90,9 +77,8 @@ pipeline {
                 }
             }
         }
-
+ 
         stage('Deploy') {
-            agent { label 'deploy-agent' }
             steps {
                 echo 'Deploying the application...'
                 // Add your deployment command here, for example:
@@ -100,7 +86,6 @@ pipeline {
             }
         }
     }
-
     post {
         success {
             echo 'Build and analysis completed successfully!'
