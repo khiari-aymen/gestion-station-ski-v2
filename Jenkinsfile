@@ -85,5 +85,10 @@ pipeline {
         failure {
             echo 'An error occurred during the build or deployment process.'
         }
+	always {
+	    emailext to: "khiari.aymen.1@esprit.tn",
+		     subject: "Jenkins Build : ${currentBuild.currentResult}: ${env.JOB_NAME}",
+	             body: "${currentBuild.currentResult}: Job ${env.JOB_NAME}\nMore info can be found here: ${env.BUILD_URL}"
+	}
     }
 }
