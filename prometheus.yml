@@ -1,8 +1,7 @@
 global:
-  scrape_interval: 25s  # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  scrape_interval: 30s  # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   evaluation_interval: 15s  # Evaluate rules every 15 seconds. The default is every 1 minute.
-  scrape_timeout: 10s  # Increase this timeout
-# scrape_timeout is set to the global default (10s).
+  scrape_timeout: 15s  # Increased timeout for each scrape
 
 # Alertmanager configuration
 alerting:
@@ -16,23 +15,24 @@ rule_files:
   # - "first_rules.yml"
   # - "second_rules.yml"
 
-# A scrape configuration containing exactly one endpoint to scrape:
-# Here it's Prometheus itself.
+# Scrape configuration
 scrape_configs:
   - job_name: "prometheus"
     static_configs:
-      - targets: ['192.168.60.130:9090']
+      - targets: ['localhost:9090']  # Since Prometheus is running locally
 
   - job_name: "jenkins"
     metrics_path: /prometheus
     static_configs:
-      - targets: ['192.168.60.130:8080']
+      - targets: ['jenkins:8080']  # Use the container name if Jenkins is running in Docker
 
   - job_name: "app"
     metrics_path: /api/actuator/prometheus
     static_configs:
-      - targets: ['192.168.60.130:8089']
+      - targets: ['app:8089']  # Use the service name 'app' defined in your docker-compose.yml
 
   - job_name: "mysqldb-exporter"
+    metrics_path: /metrics
+    scrape_timeout: 30s
     static_configs:
-      - targets: ['192.168.60.130:9104']
+      - targets: ['mysqldb-exporter:9104']

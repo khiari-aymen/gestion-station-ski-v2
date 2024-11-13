@@ -17,7 +17,7 @@ services:
       mysqldb:
         condition: service_healthy
     networks:
-      - bridge_network
+      - my_bridge_network
 
   mysqldb:
     image: mysql:8.0
@@ -28,13 +28,14 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./my.cnf:/cfg/my.cnf  # Mount the .my.cnf file
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 5
       start_period: 30s
     networks:
-      - bridge_network
+      - my_bridge_network
 
   mysqld-exporter:
     image: prom/mysqld-exporter
@@ -48,12 +49,11 @@ services:
     ports:
       - "9104:9104"  # Port d'écoute de l'exporter
     networks:
-      - bridge_network
+      - my_bridge_network
 
 networks:
-  bridge_network:
-    external: true
-    name: bridge
+  my_bridge_network:
+    driver: bridge
 
 volumes:
   mysql_data:
