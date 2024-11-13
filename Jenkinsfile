@@ -89,9 +89,54 @@ pipeline {
     post {
         success {
             echo 'Build and analysis completed successfully!'
+            emailext(
+                to: "mohamed.bouabdallah@esprit.tn",
+                subject: "Jenkins Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                    The Jenkins build completed successfully!
+
+                    Build Details:
+                    - Project: ${env.JOB_NAME}
+                    - Build Number: ${env.BUILD_NUMBER}
+                    - Status: SUCCESS
+                    - Branch: ${env.GIT_BRANCH}
+                    - Commit: ${env.GIT_COMMIT}
+                    - Build Duration: ${currentBuild.durationString}
+                    
+                    Additional Information:
+                    - Console Output: ${env.BUILD_URL}console
+                    - Changes: ${env.BUILD_URL}changes
+                    - Test Results: ${env.BUILD_URL}testReport (if applicable)
+                """
+            )
         }
         failure {
             echo 'Build or analysis failed.'
+            emailext(
+                to: "mohamed.bouabdallah@esprit.tn",
+                subject: "Jenkins Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """
+                    The Jenkins build failed.
+
+                    Build Details:
+                    - Project: ${env.JOB_NAME}
+                    - Build Number: ${env.BUILD_NUMBER}
+                    - Status: FAILURE
+                    - Branch: ${env.GIT_BRANCH}
+                    - Commit: ${env.GIT_COMMIT}
+                    - Build Duration: ${currentBuild.durationString}
+                    
+                    Additional Information:
+                    - Console Output: ${env.BUILD_URL}console
+                    - Changes: ${env.BUILD_URL}changes
+                    - Test Results: ${env.BUILD_URL}testReport (if applicable)
+
+                    Please review the build logs for more details.
+                """
+            )
+        }
+        always {
+            echo 'Cleaning up...'
         }
     }
 }
