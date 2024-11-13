@@ -43,7 +43,7 @@ services:
       - mysqldb
     command:
       - --config.my-cnf=/cfg/my.cnf
-      - --mysqld.address=mysqldb:3306  # Using service name as hostname
+      - --mysqld.address=mysqldb:3308  # Using service name as hostname
     volumes:
       - "./.my.cnf:/cfg/my.cnf"
     ports:
