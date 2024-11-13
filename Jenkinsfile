@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment {
-        SR = 'SR'  // Name of the SonarQube server configured in Jenkins
-        SONARQUBE_TOKEN = credentials('SonarToken') // SonarQube access token configured in Jenkins
+        SR = 'SR'  // Nom du serveur SonarQube configuré dans Jenkins
+        SONARQUBE_TOKEN = credentials('SonarToken') // Jeton d'accès SonarQube configuré dans Jenkins
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         IMAGE_NAME = 'bouabdallahmohamed/station-ski'
         IMAGE_TAG = 'latest'
@@ -43,7 +43,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                // sh 'mvn test' // Uncomment to run tests
+                // sh 'mvn test' // Décommentez pour exécuter les tests
             }
         }
         stage('Build Docker Image') {
@@ -73,40 +73,36 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the application...'
-                // Add your deployment command here, for example:
-                // sh 'scp target/my-app.jar user@server:/path/to/deploy'
-            }
-        }
     }
     post {
         success {
             echo 'Build and analysis completed successfully!'
             emailext(
                 to: "mohamed.bouabdallah@esprit.tn",
-                subject: "Jenkins Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                subject: "🎉 Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 mimeType: 'text/html',
                 body: """
                     <html>
-                        <body>
-                            <h2>The Jenkins build completed successfully!</h2>
-                            <p><strong>Build Details:</strong></p>
-                            <ul>
-                                <li>Project: ${env.JOB_NAME}</li>
-                                <li>Build Number: ${env.BUILD_NUMBER}</li>
-                                <li>Status: <span style="color:green;"><strong>SUCCESS</strong></span></li>
-                                <li>Branch: ${env.GIT_BRANCH}</li>
-                                <li>Commit: ${env.GIT_COMMIT}</li>
-                                <li>Build Duration: ${currentBuild.durationString}</li>
-                            </ul>
-                            <p><strong>Additional Information:</strong></p>
-                            <ul>
-                                <li><a href="${env.BUILD_URL}console">Console Output</a></li>
-                                <li><a href="${env.BUILD_URL}changes">Changes</a></li>
-                                <li><a href="${env.BUILD_URL}testReport">Test Results</a> (if applicable)</li>
-                            </ul>
+                        <body style="background: url('https://example.com/background.jpg') no-repeat center center fixed; background-size: cover; font-family: Arial, sans-serif; color: #333;">
+                            <div style="background-color: rgba(255, 255, 255, 0.85); padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;">
+                                <h2 style="color: #4CAF50;">🎉 Jenkins Build Succeeded!</h2>
+                                <p>Bonjour Mohamed,</p>
+                                <p style="font-size: 16px;">Le build de votre projet s'est terminé avec succès. Voici les détails :</p>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li><strong>Project:</strong> ${env.JOB_NAME}</li>
+                                    <li><strong>Build Number:</strong> ${env.BUILD_NUMBER}</li>
+                                    <li><strong>Status:</strong> <span style="color:green;"><strong>SUCCESS</strong></span></li>
+                                    <li><strong>Branch:</strong> ${env.GIT_BRANCH}</li>
+                                    <li><strong>Commit:</strong> ${env.GIT_COMMIT}</li>
+                                    <li><strong>Build Duration:</strong> ${currentBuild.durationString}</li>
+                                </ul>
+                                <p><strong>Plus d'informations :</strong></p>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li><a href="${env.BUILD_URL}console" style="color: #1E90FF;">Console Output</a></li>
+                                    <li><a href="${env.BUILD_URL}changes" style="color: #1E90FF;">Changes</a></li>
+                                    <li><a href="${env.BUILD_URL}testReport" style="color: #1E90FF;">Test Results</a> (si applicable)</li>
+                                </ul>
+                            </div>
                         </body>
                     </html>
                 """
@@ -116,28 +112,31 @@ pipeline {
             echo 'Build or analysis failed.'
             emailext(
                 to: "mohamed.bouabdallah@esprit.tn",
-                subject: "Jenkins Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                subject: "🚨 Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 mimeType: 'text/html',
                 body: """
                     <html>
-                        <body>
-                            <h2>The Jenkins build failed.</h2>
-                            <p><strong>Build Details:</strong></p>
-                            <ul>
-                                <li>Project: ${env.JOB_NAME}</li>
-                                <li>Build Number: ${env.BUILD_NUMBER}</li>
-                                <li>Status: <span style="color:red;"><strong>FAILURE</strong></span></li>
-                                <li>Branch: ${env.GIT_BRANCH}</li>
-                                <li>Commit: ${env.GIT_COMMIT}</li>
-                                <li>Build Duration: ${currentBuild.durationString}</li>
-                            </ul>
-                            <p><strong>Additional Information:</strong></p>
-                            <ul>
-                                <li><a href="${env.BUILD_URL}console">Console Output</a></li>
-                                <li><a href="${env.BUILD_URL}changes">Changes</a></li>
-                                <li><a href="${env.BUILD_URL}testReport">Test Results</a> (if applicable)</li>
-                            </ul>
-                            <p>Please review the build logs for more details.</p>
+                        <body style="background: url('https://example.com/background.jpg') no-repeat center center fixed; background-size: cover; font-family: Arial, sans-serif; color: #333;">
+                            <div style="background-color: rgba(255, 255, 255, 0.85); padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;">
+                                <h2 style="color: #FF0000;">🚨 Jenkins Build Failed!</h2>
+                                <p>Bonjour Mohamed,</p>
+                                <p style="font-size: 16px;">Le build de votre projet a échoué. Voici les détails :</p>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li><strong>Project:</strong> ${env.JOB_NAME}</li>
+                                    <li><strong>Build Number:</strong> ${env.BUILD_NUMBER}</li>
+                                    <li><strong>Status:</strong> <span style="color:red;"><strong>FAILURE</strong></span></li>
+                                    <li><strong>Branch:</strong> ${env.GIT_BRANCH}</li>
+                                    <li><strong>Commit:</strong> ${env.GIT_COMMIT}</li>
+                                    <li><strong>Build Duration:</strong> ${currentBuild.durationString}</li>
+                                </ul>
+                                <p><strong>Plus d'informations :</strong></p>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li><a href="${env.BUILD_URL}console" style="color: #1E90FF;">Console Output</a></li>
+                                    <li><a href="${env.BUILD_URL}changes" style="color: #1E90FF;">Changes</a></li>
+                                    <li><a href="${env.BUILD_URL}testReport" style="color: #1E90FF;">Test Results</a> (si applicable)</li>
+                                </ul>
+                                <p>Merci de vérifier les journaux de build pour plus de détails.</p>
+                            </div>
                         </body>
                     </html>
                 """
