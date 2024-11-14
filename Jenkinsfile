@@ -92,6 +92,8 @@
             }
         }
 
+      }
+
     post {
         success {
             echo 'Build and analysis completed successfully!'
