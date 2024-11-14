@@ -72,7 +72,6 @@
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR')]) {
                         sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
                         sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                         sh "docker logout"
@@ -85,16 +84,13 @@
             steps {
                 echo 'Deploying the application with Docker Compose...'
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR')]) {
-                        sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
-                        sh 'docker compose down'
-                        sh 'docker compose up -d'
-                        sh "docker logout"
-                    }
+                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                    sh 'docker-compose down'
+                    sh 'docker-compose up -d'
+                    sh "docker logout"
                 }
             }
         }
-    }
 
     post {
         success {
