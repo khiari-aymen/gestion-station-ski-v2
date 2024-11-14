@@ -100,7 +100,7 @@ pipeline {
         success {
             echo 'Build and analysis completed successfully!'
             emailext(
-                to: "eya.elbehi@esprit.tn",
+                to: "mohamed.bouabdallah@esprit.tn",
                 subject: "Jenkins Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
                     The Jenkins build completed successfully!
@@ -123,7 +123,7 @@ pipeline {
         failure {
             echo 'Build or analysis failed.'
             emailext(
-                to: "eya.elbehi@esprit.tn",
+                to: "mohamed.bouabdallah@esprit.tn",
                 subject: "Jenkins Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
                     The Jenkins build failed.
