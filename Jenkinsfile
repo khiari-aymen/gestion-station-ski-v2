@@ -1,146 +1,13 @@
- post {
-        success {
-            echo 'Build and analysis completed successfully!'
-            emailext(
-                to: "mohamed.bouabdallah@esprit.tn",
-                subject: "Jenkins Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                mimeType: 'text/html',
-                body: """
-                    <html>
-                        <body>
-                            <h2>The Jenkins build completed successfully!</h2>
-                            <p><strong>Build Details:</strong></p>
-                            <ul>
-                                <li>Project: ${env.JOB_NAME}</li>
-                                <li>Build Number: ${env.BUILD_NUMBER}</li>
-                                <li>Status: <span style="color:green;"><strong>SUCCESS</strong></span></li>
-                                <li>Branch: ${env.GIT_BRANCH}</li>
-                                <li>Commit: ${env.GIT_COMMIT}</li>
-                                <li>Build Duration: ${currentBuild.durationString}</li>
-                            </ul>
-                            <p><strong>Additional Information:</strong></p>
-                            <ul>
-                                <li><a href="${env.BUILD_URL}console">Console Output</a></li>
-                                <li><a href="${env.BUILD_URL}changes">Changes</a></li>
-                                <li><a href="${env.BUILD_URL}testReport">Test Results</a> (if applicable)</li>
-                            </ul>
-                        </body>
-                    </html>
-                """
-            )
-        }
-        failure {
-            echo 'Build or analysis failed.'
-            emailext(
-                to: "mohamed.bouabdallah@esprit.tn",
-                subject: "Jenkins Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                mimeType: 'text/html',
-                body: """
-                    <html>
-                        <body>
-                            <h2>The Jenkins build failed.</h2>
-                            <p><strong>Build Details:</strong></p>
-                            <ul>
-                                <li>Project: ${env.JOB_NAME}</li>
-                                <li>Build Number: ${env.BUILD_NUMBER}</li>
-                                <li>Status: <span style="color:red;"><strong>FAILURE</strong></span></li>
-                                <li>Branch: ${env.GIT_BRANCH}</li>
-                                <li>Commit: ${env.GIT_COMMIT}</li>
-                                <li>Build Duration: ${currentBuild.durationString}</li>
-                            </ul>
-                            <p><strong>Additional Information:</strong></p>
-                            <ul>
-                                <li><a href="${env.BUILD_URL}console">Console Output</a></li>
-                                <li><a href="${env.BUILD_URL}changes">Changes</a></li>
-                                <li><a href="${env.BUILD_URL}testReport">Test Results</a> (if applicable)</li>
-                            </ul>
-                            <p>Please review the build logs for more details.</p>
-                        </body>
-                    </html>
-                """
-            )
-        }
-        always {
-            echo 'Cleaning up...'
-        }
-    }
-} post {
-        success {
-            echo 'Build and analysis completed successfully!'
-            emailext(
-                to: "mohamed.bouabdallah@esprit.tn",
-                subject: "Jenkins Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                mimeType: 'text/html',
-                body: """
-                    <html>
-                        <body>
-                            <h2>The Jenkins build completed successfully!</h2>
-                            <p><strong>Build Details:</strong></p>
-                            <ul>
-                                <li>Project: ${env.JOB_NAME}</li>
-                                <li>Build Number: ${env.BUILD_NUMBER}</li>
-                                <li>Status: <span style="color:green;"><strong>SUCCESS</strong></span></li>
-                                <li>Branch: ${env.GIT_BRANCH}</li>
-                                <li>Commit: ${env.GIT_COMMIT}</li>
-                                <li>Build Duration: ${currentBuild.durationString}</li>
-                            </ul>
-                            <p><strong>Additional Information:</strong></p>
-                            <ul>
-                                <li><a href="${env.BUILD_URL}console">Console Output</a></li>
-                                <li><a href="${env.BUILD_URL}changes">Changes</a></li>
-                                <li><a href="${env.BUILD_URL}testReport">Test Results</a> (if applicable)</li>
-                            </ul>
-                        </body>
-                    </html>
-                """
-            )
-        }
-        failure {
-            echo 'Build or analysis failed.'
-            emailext(
-                to: "mohamed.bouabdallah@esprit.tn",
-                subject: "Jenkins Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                mimeType: 'text/html',
-                body: """
-                    <html>
-                        <body>
-                            <h2>The Jenkins build failed.</h2>
-                            <p><strong>Build Details:</strong></p>
-                            <ul>
-                                <li>Project: ${env.JOB_NAME}</li>
-                                <li>Build Number: ${env.BUILD_NUMBER}</li>
-                                <li>Status: <span style="color:red;"><strong>FAILURE</strong></span></li>
-                                <li>Branch: ${env.GIT_BRANCH}</li>
-                                <li>Commit: ${env.GIT_COMMIT}</li>
-                                <li>Build Duration: ${currentBuild.durationString}</li>
-                            </ul>
-                            <p><strong>Additional Information:</strong></p>
-                            <ul>
-                                <li><a href="${env.BUILD_URL}console">Console Output</a></li>
-                                <li><a href="${env.BUILD_URL}changes">Changes</a></li>
-                                <li><a href="${env.BUILD_URL}testReport">Test Results</a> (if applicable)</li>
-                            </ul>
-                            <p>Please review the build logs for more details.</p>
-                        </body>
-                    </html>
-                """
-            )
-        }
-        always {
-            echo 'Cleaning up...'
-        }
-    }
-}pipeline {
+ pipeline {
     agent any
 
     environment {
-        // Ajoutez les informations d'identification SonarQube
-        SONARQUBE_SERVER = 'sq1'  // Remplacez par le nom du serveur SonarQube configuré dans Jenkins
-        SONARQUBE_TOKEN = credentials('jenkins-sonaaar') // Configurez votre token d'accès SonarQube dans Jenkins
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub')
+        // Add SonarQube and Docker Hub credentials
+        SONARQUBE_SERVER = 'sq1' // Replace with your SonarQube server name in Jenkins
+        SONARQUBE_TOKEN = credentials('jenkins-sonaaar') // Replace with your SonarQube token ID
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub') // Replace with your Docker Hub credentials ID
         IMAGE_NAME = 'lindaboukhit/station-ski'
         IMAGE_TAG = 'latest'
-      
     }
 
     stages {
@@ -168,26 +35,48 @@
         stage('SonarQube Analysis') {
             steps {
                 echo 'Analyzing the project with SonarQube...'
-                withSonarQubeEnv('sq1') {
-                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000/'
+                withSonarQubeEnv('sq1') { 
+                    sh '''
+                    mvn sonar:sonar \
+                        -Dsonar.login=$SONARQUBE_TOKEN \
+                        -Dsonar.projectKey=erp-bi5-opsight-station-ski \
+                        -Dsonar.host.url=http://192.168.50.4:9000/
+                    '''
                 }
             }
         }
-        
-       stage('Build') {
+
+        stage('Build') {
             steps {
                 echo 'Building the project...'
                 sh 'mvn clean deploy -DskipTests'
             }
         }
-       
+
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                // Uncomment the following line to enable tests
+                // sh 'mvn test'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker Image...'
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+            }
+        }
+
         stage('Push Docker Image') {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
                 script {
-                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
-                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker logout"
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR')]) {
+                        sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                        sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                        sh "docker logout"
+                    }
                 }
             }
         }
@@ -196,41 +85,38 @@
             steps {
                 echo 'Deploying the application with Docker Compose...'
                 script {
-                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
-                    sh 'docker-compose down'
-                    sh 'docker-compose up -d'
-                    sh "docker logout"
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_HUB_CREDENTIALS_PSW', usernameVariable: 'DOCKER_HUB_CREDENTIALS_USR')]) {
+                        sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
+                        sh 'docker compose down'
+                        sh 'docker compose up -d'
+                        sh "docker logout"
+                    }
                 }
             }
         }
-       post {
+    }
+
+    post {
         success {
             echo 'Build and analysis completed successfully!'
             emailext(
                 to: "linda.boukhit@esprit.tn",
                 subject: "Jenkins Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                mimeType: 'text/html',
                 body: """
-                    <html>
-                        <body>
-                            <h2>The Jenkins build completed successfully!</h2>
-                            <p><strong>Build Details:</strong></p>
-                            <ul>
-                                <li>Project: ${env.JOB_NAME}</li>
-                                <li>Build Number: ${env.BUILD_NUMBER}</li>
-                                <li>Status: <span style="color:green;"><strong>SUCCESS</strong></span></li>
-                                <li>Branch: ${env.GIT_BRANCH}</li>
-                                <li>Commit: ${env.GIT_COMMIT}</li>
-                                <li>Build Duration: ${currentBuild.durationString}</li>
-                            </ul>
-                            <p><strong>Additional Information:</strong></p>
-                            <ul>
-                                <li><a href="${env.BUILD_URL}console">Console Output</a></li>
-                                <li><a href="${env.BUILD_URL}changes">Changes</a></li>
-                                <li><a href="${env.BUILD_URL}testReport">Test Results</a> (if applicable)</li>
-                            </ul>
-                        </body>
-                    </html>
+                    The Jenkins build completed successfully!
+
+                    Build Details:
+                    - Project: ${env.JOB_NAME}
+                    - Build Number: ${env.BUILD_NUMBER}
+                    - Status: SUCCESS
+                    - Branch: ${env.GIT_BRANCH}
+                    - Commit: ${env.GIT_COMMIT}
+                    - Build Duration: ${currentBuild.durationString}
+
+                    Additional Information:
+                    - Console Output: ${env.BUILD_URL}console
+                    - Changes: ${env.BUILD_URL}changes
+                    - Test Results: ${env.BUILD_URL}testReport (if applicable)
                 """
             )
         }
@@ -239,29 +125,23 @@
             emailext(
                 to: "linda.boukhit@esprit.tn",
                 subject: "Jenkins Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                mimeType: 'text/html',
                 body: """
-                    <html>
-                        <body>
-                            <h2>The Jenkins build failed.</h2>
-                            <p><strong>Build Details:</strong></p>
-                            <ul>
-                                <li>Project: ${env.JOB_NAME}</li>
-                                <li>Build Number: ${env.BUILD_NUMBER}</li>
-                                <li>Status: <span style="color:red;"><strong>FAILURE</strong></span></li>
-                                <li>Branch: ${env.GIT_BRANCH}</li>
-                                <li>Commit: ${env.GIT_COMMIT}</li>
-                                <li>Build Duration: ${currentBuild.durationString}</li>
-                            </ul>
-                            <p><strong>Additional Information:</strong></p>
-                            <ul>
-                                <li><a href="${env.BUILD_URL}console">Console Output</a></li>
-                                <li><a href="${env.BUILD_URL}changes">Changes</a></li>
-                                <li><a href="${env.BUILD_URL}testReport">Test Results</a> (if applicable)</li>
-                            </ul>
-                            <p>Please review the build logs for more details.</p>
-                        </body>
-                    </html>
+                    The Jenkins build failed.
+
+                    Build Details:
+                    - Project: ${env.JOB_NAME}
+                    - Build Number: ${env.BUILD_NUMBER}
+                    - Status: FAILURE
+                    - Branch: ${env.GIT_BRANCH}
+                    - Commit: ${env.GIT_COMMIT}
+                    - Build Duration: ${currentBuild.durationString}
+
+                    Additional Information:
+                    - Console Output: ${env.BUILD_URL}console
+                    - Changes: ${env.BUILD_URL}changes
+                    - Test Results: ${env.BUILD_URL}testReport (if applicable)
+
+                    Please review the build logs for more details.
                 """
             )
         }
@@ -270,3 +150,4 @@
         }
     }
 }
+
