@@ -30,6 +30,15 @@ pipeline {
                 sh 'mvn compile'
             }
         }
+	stage('JaCoCo Report') {   
+            steps {   
+                jacoco(
+                    execPattern: '**/jacoco.exec',   
+                    classPattern: '**/classes',   
+                    sourcePattern: '**/src/main/java'
+                )   
+            }   
+        }
 
         stage('SonarQube Analysis') {
             steps {
@@ -44,6 +53,7 @@ pipeline {
                 }
             }
         }
+	
 
         stage('Build') {
             steps {
