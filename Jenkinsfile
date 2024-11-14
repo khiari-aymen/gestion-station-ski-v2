@@ -81,7 +81,7 @@ pipeline {
         success {
             echo 'Build, Docker image creation, push, and deployment completed successfully!'
             emailext(
-                to: "mohamed.bouabdallah@esprit.tn",
+                to: "ismahen.benhalima@esprit.tn",
                 subject: "Jenkins Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
                     The Jenkins build completed successfully!
@@ -103,7 +103,7 @@ pipeline {
         failure {
             echo 'Build or analysis failed.'
             emailext(
-                to: "mohamed.bouabdallah@esprit.tn",
+                to: "ismahen.benhalima@esprit.tn",
                 subject: "Jenkins Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
                     The Jenkins build failed.
