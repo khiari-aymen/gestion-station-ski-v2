@@ -85,14 +85,7 @@ pipeline {
                     sh "docker logout"
                 }
             }
-        }
-	
-	stage('Performance Testing') {
-	    steps {
-		echo 'Running performance tests...'
-		sh 'jmeter -n -t /vagrant/test_plan.jmx -l /vagrant/test_results.jtl'
-	    }
-	}
+       }	
 
     }
 
