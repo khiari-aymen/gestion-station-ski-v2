@@ -31,24 +31,28 @@ pipeline {
             }
         }
         
-	stage('JaCoCo Report') {   
-            steps {   
-                jacoco(
-                    execPattern: '**/jacoco.exec',   
-                    classPattern: '**/classes',   
-                    sourcePattern: '**/src/main/java'
-                )   
-            }   
-        }
- 
-        stage('SonarQube Analysis') {
-            steps {
-                echo 'Analyzing the project with SonarQube...'
-                withSonarQubeEnv('SonarQube_Server') {
-                    sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000/'
-                }
+	stage('Static Analysis') {
+	    parallel {
+		stage('JaCoCo Report') {   
+		    steps {   
+			jacoco(
+			    execPattern: '**/jacoco.exec',   
+			    classPattern: '**/classes',   
+                            sourcePattern: '**/src/main/java'
+			)   
+		    }   
+		}
+
+		stage('SonarQube Analysis') {
+		    steps {
+			echo 'Analyzing the project with SonarQube...'
+			withSonarQubeEnv('SonarQube_Server') {
+			 sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.50.4:9000/'
+			}
+	            }
+		}
             }
-        }
+	}
 
         stage('Build') {
             steps {
