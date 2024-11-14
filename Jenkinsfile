@@ -90,7 +90,7 @@ pipeline {
 	stage('Performance Testing') {
 	    steps {
 		echo 'Running performance tests...'
-		sh 'jmeter -n -t test_plan.jmx -l test_results.jtl'
+		sh 'jmeter -n -t /vagrant/test_plan.jmx -l /vagrant/test_results.jtl'
 	    }
 	}
 
@@ -141,7 +141,7 @@ pipeline {
                         <body style="background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS90sm-yM3GhxLxYHhO6N9_E-r6CSt3JJa7kgL5HgCxEEOhGpudSnwgsG2sP74eMhoACLo&usqp=CAU') no-repeat center center fixed; background-size: cover; font-family: Arial, sans-serif; color: #333;">
                             <div style="background-color: rgba(255, 255, 255, 0.85); padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;">
                                 <h2 style="color: #FF0000;">🚨 Jenkins Build Failed!</h2>
-                                <p>Bonjour Mohamed,</p>
+                                <p>Bonjour Mr Khiari,</p>
                                 <p style="font-size: 16px;">Le build de votre projet a échoué. Voici les détails :</p>
                                 <ul style="list-style: none; padding: 0;">
                                     <li><strong>Project:</strong> ${env.JOB_NAME}</li>
