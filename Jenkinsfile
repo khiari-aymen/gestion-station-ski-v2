@@ -10,24 +10,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Cloning the repository...'
+                echo '🔄 Cloning the repository...'
                 git url: 'https://github.com/khiari-aymen/erp-bi5-opsight-station-ski.git', branch: 'BOUABDALLAHMohamed-ERP-BI5-opsight'
             }
         }
         stage('Clean') {
             steps {
-                echo 'Cleaning the project...'
+                echo '🧹 Cleaning the project...'
                 sh 'mvn clean'
             }
         }
         stage('Compile') {
             steps {
-                echo 'Compiling the project...'
+                echo '🔨 Compiling the project...'
                 sh 'mvn compile'
             }
         }
-	stage('JaCoCo Report') {   
+        stage('JaCoCo Report') {   
             steps {   
+                echo '📊 Generating JaCoCo Report...'
                 jacoco(
                     execPattern: '**/jacoco.exec',   
                     classPattern: '**/classes',   
@@ -37,7 +38,7 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                echo 'Analyzing the project with SonarQube...'
+                echo '🔍 Analyzing the project with SonarQube...'
                 withSonarQubeEnv('SR') {
                     sh 'mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectKey=erp-bi5-opsight-station-ski -Dsonar.host.url=http://192.168.51.4:9000/'
                 }
@@ -45,25 +46,25 @@ pipeline {
         }
         stage('Build') {
             steps {
-                echo 'Building the project...'
+                echo '🚀 Building the project...'
                 sh 'mvn clean deploy -DskipTests'
             }
         }
         stage('Test') {
             steps {
-                echo 'Running tests...'
+                echo '🧪 Running tests...'
                 // sh 'mvn test' // Décommentez pour exécuter les tests
             }
         }
         stage('Build Docker Image') {
             steps {
-                echo 'Building Docker Image...'
+                echo '🐳 Building Docker Image...'
                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
         stage('Push Docker Image') {
             steps {
-                echo 'Pushing Docker Image to Docker Hub...'
+                echo '📤 Pushing Docker Image to Docker Hub...'
                 script {
                     sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
                     sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
@@ -73,7 +74,7 @@ pipeline {
         }
         stage('Deploy with Docker Compose') {
             steps {
-                echo 'Deploying the application with Docker Compose...'
+                echo '⚙️ Deploying the application with Docker Compose...'
                 script {
                     sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
                     sh 'docker compose down'
@@ -85,7 +86,7 @@ pipeline {
     }
     post {
         success {
-            echo 'Build and analysis completed successfully!'
+            echo '🎉 Build and analysis completed successfully!'
             emailext(
                 to: "mohamed.bouabdallah@esprit.tn",
                 subject: "🎉 Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
@@ -118,7 +119,7 @@ pipeline {
             )
         }
         failure {
-            echo 'Build or analysis failed.'
+            echo '❌ Build or analysis failed.'
             emailext(
                 to: "mohamed.bouabdallah@esprit.tn",
                 subject: "🚨 Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
@@ -152,7 +153,7 @@ pipeline {
             )
         }
         always {
-            echo 'Cleaning up...'
+            echo '🧹 Cleaning up...'
         }
     }
 }
