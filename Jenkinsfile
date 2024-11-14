@@ -32,6 +32,16 @@
             }
         }
 
+        stage('JaCoCo Report') {   
+            steps {   
+                jacoco(
+                    execPattern: '**/jacoco.exec',   
+                    classPattern: '**/classes',   
+                    sourcePattern: '**/src/main/java'
+                )   
+            }   
+        }
+
         stage('SonarQube Analysis') {
             steps {
                 echo 'Analyzing the project with SonarQube...'
