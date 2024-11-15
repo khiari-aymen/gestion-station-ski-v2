@@ -85,7 +85,17 @@ pipeline {
                     sh "docker logout"
                 }
             }
-       }	
+       }
+
+	stage('Deploy with azure') {
+            steps {
+                script {
+                        withKubeConfig([credentialsId: 'K8S', serverUrl: '']) {
+                            sh ('kubectl apply -f  deployment.yaml')
+                        }
+                }
+            }
+        }
 
     }
 
