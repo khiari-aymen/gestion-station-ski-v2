@@ -3,7 +3,7 @@
     environment {
         // Add SonarQube and Docker Hub credentials
         SONARQUBE_SERVER = 'sq1' // Replace with your SonarQube server name in Jenkins
-        SONARQUBE_TOKEN = credentials('jenkins-sonaaar') // Replace with your SonarQube token ID
+        SONARQUBE_TOKEN = credentials('jenkins-Sonar') // Replace with your SonarQube token ID
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub') // Replace with your Docker Hub credentials ID
         IMAGE_NAME = 'lindaboukhit/station-ski'
         IMAGE_TAG = 'latest'
